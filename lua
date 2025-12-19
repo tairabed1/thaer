@@ -1,5 +1,5 @@
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
 -- إنشاء النافذة باسمك
 local Window = Library.CreateLib("THAER PRIVATE MOD", "BloodTheme")
 
@@ -37,4 +37,5 @@ end)
 
 Section3.NewKeybind("Hide Menu", "Press F to Toggle", Enum.KeyCode.F, function()
     Library:ToggleUI()
+
 end)
