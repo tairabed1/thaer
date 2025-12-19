@@ -1,199 +1,80 @@
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
 local Window = Library.CreateLib("thaer", "BloodTheme")
-local Tab1 = Window.NewTab("Legendary Pets")
-local Section1 = Tab1.NewSection("Spawn Legendary (Visual Only)")
-
-local pets = {
-    "Mega Shadow Dragon",
-    "Neon Frost Dragon",
-    "Giraffe",
-    "Bat Dragon",
-    "Owl",
-    "Parrot",
-    "Evil Unicorn",
-    "Crow"
-}
-
-for _, petName in pairs(pets) do
-    Section1.NewButton("Spawn " .. petName, "Adds " .. petName .. " to visual inventory", function()
-        -- إشعار يظهر على الشاشة كأنه حقيقي
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "PET SPAWNED!",
-            Text = petName .. " has been added to your inventory.",
-            Icon = "rbxassetid://12345678", -- هنا يوضع آيدي الصورة
-            Duration = 5
-        })
-        print(petName .. " spawned visually.")
-    end)
-end
-
--- قائمة التريد الوهمي
-local Tab2 = Window.NewTab("Fake Trade")
-local Section2 = Tab2.NewSection("Trade Hacks")
-
-Section2.NewButton("Auto Accept Trade", "Forces visual green light", function()
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Trade Hack",
-        Text = "Fake Accept Enabled",
-        Duration = 3
-    })
-end)
-
-Section2.NewButton("Clear Trade (Fake)", "Visual reset", function()
-    print("Trade Cleared")
-end)
-
--- قائمة اللاعب (السرعة والقفز)
-local Tab3 = Window.NewTab("Player Settings")
-local Section3 = Tab3.NewSection("Abilities")
-
-Section3.NewSlider("Speed", "Move Faster", 500, 16, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-
-Section3.NewButton("Fly Mode (Visual)", "Makes it look like you are flying", function()
-    game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
-end)
--- القائمة الأولى: رسبنة الحيوانات (بصري)
-local Tab1 = Window.NewTab("Pets Spawner")
-local Section1 = Tab1.NewSection("Legendary Pets (Visual)")
-
-local legendaryPets = {"Shadow Dragon", "Frost Dragon", "Bat Dragon", "Giraffe", "Owl", "Parrot"}
-
-for _, pet in pairs(legendaryPets) do
-    Section1.NewButton("Spawn Mega Neon " .. pet, "Adds visual pet to inventory", function()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Success!",
-            Text = "Mega Neon " .. pet .. " Spawned!",
-            Duration = 5
-        })
-    end)
-end
-
--- القائمة الثانية: التريد الوهمي
-local Tab2 = Window.NewTab("Fake Trade")
-local Section2 = Tab2.NewSection("Trade Options")
-
-Section2.NewButton("Force Accept (Visual)", "Makes you look like you accepted", function()
-    print("Fake Accept Enabled")
-end)
-
-Section2.NewToggle("Infinite Items", "Visual infinite items in trade", function(state)
-    if state then
-        print("Infinite Enabled")
-    else
-        print("Infinite Disabled")
-    end
-end)
-
--- القائمة الثالثة: إعدادات اللاعب
-local Tab3 = Window.NewTab("Player")
-local Section3 = Tab3.NewSection("Abilities")
-
-Section3.NewSlider("Speed", "Control your walk speed", 500, 16, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-
-Section3.NewKeybind("Hide Menu", "Press a key to hide", Enum.KeyCode.F, function()
-    Library:ToggleUI()
-end)
-local Window = Library.CreateLib("THAER PRIVATE MOD", "BloodTheme")
-
--- 1. قائمة الحيوانات (Pets)
-local Tab1 = Window.NewTab("Pets Spawner")
-local Section1 = Tab1.NewSection("Legendary Pets (Visual)")
-
-local pets = {"Shadow Dragon", "Frost Dragon", "Bat Dragon", "Giraffe", "Owl", "Parrot"}
-
-for _, petName in pairs(pets) do
-    Section1.NewButton("Spawn Mega Neon " .. petName, "Adds visual pet", function()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "PET SPAWNED!",
-            Text = petName .. " has been added!",
-            Duration = 5
-        })
-    end)
-end
-
--- 2. قائمة التريد (Trade)
-local Tab2 = Window.NewTab("Fake Trade")
-local Section2 = Tab2.NewSection("Trade Hacks")
-
-Section2.NewButton("Force Accept (Visual)", "Green light", function()
-    print("Fake Accept Enabled")
-end)
-
--- 3. قائمة اللاعب (Player)
-local Tab3 = Window.NewTab("Player Settings")
-local Section3 = Tab3.NewSection("Abilities")
-
-Section3.NewSlider("Speed", "Move Fast", 500, 16, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-
-Section3.NewKeybind("Hide Menu", "Press F to Toggle", Enum.KeyCode.F, function()
-    Library:ToggleUI()
-end)
--- مسح أي واجهة قديمة
 for _, v in pairs(game.CoreGui:GetChildren()) do
-    if v.Name == "ThaerMod" then v:Destroy() end
+    if v.Name == "ThaerFinalMod" then v:Destroy() end
 end
 
--- إنشاء الواجهة الأساسية
+-- 2. إنشاء الواجهة الأساسية
 local sg = Instance.new("ScreenGui", game.CoreGui)
-sg.Name = "ThaerMod"
+sg.Name = "ThaerFinalMod"
 
 local main = Instance.new("Frame", sg)
-main.Size = UDim2.new(0, 250, 0, 350)
-main.Position = UDim2.new(0.5, -125, 0.5, -175)
-main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+main.Size = UDim2.new(0, 260, 0, 420)
+main.Position = UDim2.new(0.5, -130, 0.5, -210)
+main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 main.BorderSizePixel = 2
 main.Active = true
-main.Draggable = true -- تقدر تحركها بالماوس
+main.Draggable = true -- يمكنك تحريك القائمة بالماوس
 
+-- العنوان العلوي
 local title = Instance.new("TextLabel", main)
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "THAER CONTROL - ADOPT ME"
-title.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+title.Size = UDim2.new(1, 0, 0, 45)
+title.Text = "THAER MOD - ADOPT ME"
+title.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
 
-local layout = Instance.new("UIListLayout", main)
-layout.Padding = UDim.new(0, 5)
-layout.SortOrder = Enum.SortOrder.LayoutOrder
+-- حاوية الأزرار (قابلة للسحب)
+local container = Instance.new("ScrollingFrame", main)
+container.Size = UDim2.new(1, -10, 1, -55)
+container.Position = UDim2.new(0, 5, 0, 50)
+container.BackgroundTransparency = 1
+container.CanvasSize = UDim2.new(0, 0, 1.8, 0)
+container.ScrollBarThickness = 3
 
--- وظيفة صنع الأزرار
-local function makeBtn(name, func)
-    local b = Instance.new("TextButton", main)
-    b.Size = UDim2.new(1, 0, 0, 35)
-    b.Text = name
-    b.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+local layout = Instance.new("UIListLayout", container)
+layout.Padding = UDim.new(0, 7)
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+-- وظيفة برمجة الأزرار
+local function addBtn(txt, color, action)
+    local b = Instance.new("TextButton", container)
+    b.Size = UDim2.new(0.95, 0, 0, 40)
+    b.Text = txt
+    b.BackgroundColor3 = color
     b.TextColor3 = Color3.fromRGB(255, 255, 255)
-    b.MouseButton1Click:Connect(func)
+    b.Font = Enum.Font.GothamMedium
+    b.TextSize = 14
+    b.MouseButton1Click:Connect(action)
 end
 
--- أزرار الحيوانات الوهمية (تطلع إشعار)
-makeBtn("Spawn Mega Shadow Dragon", function()
-    game.StarterGui:SetCore("SendNotification", {Title = "MOD", Text = "Mega Shadow Added!"})
+-- 3. قائمة الأوامر (جاهزة للعمل)
+addBtn("Spawn Mega Shadow Dragon", Color3.fromRGB(50, 50, 50), function()
+    game.StarterGui:SetCore("SendNotification", {Title = "PET", Text = "Shadow Dragon Added!"})
 end)
 
-makeBtn("Spawn Neon Frost Dragon", function()
-    game.StarterGui:SetCore("SendNotification", {Title = "MOD", Text = "Frost Dragon Added!"})
+addBtn("Spawn Neon Frost Dragon", Color3.fromRGB(50, 50, 50), function()
+    game.StarterGui:SetCore("SendNotification", {Title = "PET", Text = "Frost Dragon Added!"})
 end)
 
-makeBtn("Fake Trade Accept", function()
-    game.StarterGui:SetCore("SendNotification", {Title = "MOD", Text = "Trade Accepted Visually"})
+addBtn("Spawn Bat Dragon", Color3.fromRGB(50, 50, 50), function()
+    game.StarterGui:SetCore("SendNotification", {Title = "PET", Text = "Bat Dragon Added!"})
 end)
 
--- أزرار التحكم باللاعب
-makeBtn("Speed Hack (Fast)", function()
+addBtn("Visual Trade Accept (ON)", Color3.fromRGB(0, 150, 0), function()
+    game.StarterGui:SetCore("SendNotification", {Title = "TRADE", Text = "Fake Trade Active!"})
+end)
+
+addBtn("Speed Hack (x100)", Color3.fromRGB(0, 100, 200), function()
     game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
 end)
 
-makeBtn("High Jump", function()
+addBtn("Super Jump", Color3.fromRGB(0, 100, 200), function()
     game.Players.LocalPlayer.Character.Humanoid.JumpPower = 150
 end)
 
-makeBtn("إغلاق القائمة", function()
+addBtn("إغلاق القائمة", Color3.fromRGB(100, 0, 0), function()
     sg:Destroy()
 end)
