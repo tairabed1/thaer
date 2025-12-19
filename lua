@@ -2,12 +2,12 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
 local Window = Library.CreateLib("thaer", "BloodTheme")
 
--- القائمة الأولى: التريد الوهمي (بصري)
+
 local Tab1 = Window.NewTab("Fake Trade")
 local Section1 = Tab1.NewSection("Visual Pets (Only You See)")
 
 Section1.NewButton("Add Mega Shadow Dragon", "Shows a shadow dragon in trade", function()
-    -- إشعار وهمي
+   
     game.StarterGui:SetCore("SendNotification", {
         Title = "MOD ACTIVE",
         Text = "Visual Mega Shadow Added!",
@@ -21,12 +21,12 @@ Section1.NewButton("Fake Accept Trade", "Forces the green check mark (Visual)", 
     print("Visual Accept Enabled")
 end)
 
--- القائمة الثانية: حيوانات وهمية (Spawner)
+(Spawner)
 local Tab2 = Window.NewTab("Fake Spawner")
 local Section2 = Tab2.NewSection("Visual Spawner")
 
 Section2.NewButton("Spawn Frost Dragon (Visual)", "Spawn a dragon next to you", function()
-    -- إشعار
+    
     game.StarterGui:SetCore("SendNotification", {
         Title = "Spawner",
         Text = "Frost Dragon Spawned (Local)",
@@ -34,7 +34,7 @@ Section2.NewButton("Spawn Frost Dragon (Visual)", "Spawn a dragon next to you", 
     })
 end)
 
--- القائمة الثالثة: إعدادات اللاعب
+
 local Tab3 = Window.NewTab("Player")
 local Section3 = Tab3.NewSection("Speed & Jump")
 
@@ -43,11 +43,10 @@ Section3.NewSlider("WalkSpeed", "Changes your speed", 250, 16, function(s)
 end)
 
 Section3.NewButton("Inf Jump", "Jump as much as you want", function()
-    -- كود القفز اللانهائي
+    
     game:GetService("UserInputService").JumpRequest:Connect(function()
         game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
     end)
-
 end)
 local Tab1 = Window.NewTab("Legendary Pets")
 local Section1 = Tab1.NewSection("Spawn Legendary (Visual Only)")
