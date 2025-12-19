@@ -1,53 +1,6 @@
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
 local Window = Library.CreateLib("thaer", "BloodTheme")
-
-
-local Tab1 = Window.NewTab("Fake Trade")
-local Section1 = Tab1.NewSection("Visual Pets (Only You See)")
-
-Section1.NewButton("Add Mega Shadow Dragon", "Shows a shadow dragon in trade", function()
-   
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "MOD ACTIVE",
-        Text = "Visual Mega Shadow Added!",
-        Duration = 5
-    })
-    print("Success: Mega Shadow Added visually")
-end)
-
-Section1.NewButton("Fake Accept Trade", "Forces the green check mark (Visual)", function()
-    -- كود إظهار علامة الصح الخضراء عندك
-    print("Visual Accept Enabled")
-end)
-
-(Spawner)
-local Tab2 = Window.NewTab("Fake Spawner")
-local Section2 = Tab2.NewSection("Visual Spawner")
-
-Section2.NewButton("Spawn Frost Dragon (Visual)", "Spawn a dragon next to you", function()
-    
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Spawner",
-        Text = "Frost Dragon Spawned (Local)",
-        Duration = 3
-    })
-end)
-
-
-local Tab3 = Window.NewTab("Player")
-local Section3 = Tab3.NewSection("Speed & Jump")
-
-Section3.NewSlider("WalkSpeed", "Changes your speed", 250, 16, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-
-Section3.NewButton("Inf Jump", "Jump as much as you want", function()
-    
-    game:GetService("UserInputService").JumpRequest:Connect(function()
-        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
-    end)
-end)
 local Tab1 = Window.NewTab("Legendary Pets")
 local Section1 = Tab1.NewSection("Spawn Legendary (Visual Only)")
 
