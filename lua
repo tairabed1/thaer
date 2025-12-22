@@ -1,41 +1,126 @@
+--==============================
+-- Orion Library
+--==============================
+local OrionLib = loadstring(game:HttpGet( "https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
 
-for _, v in pairs(game.CoreGui:GetChildren()) do
-    if v.Name == "ThaerAdoptMe" then v:Destroy() end
-end
+--==============================
+-- Window
+--==============================
+local Window = OrionLib:MakeWindow({
+    Name = "Adopt Me | Fake Trade",
+    SaveConfig = true,
+    ConfigFolder = "FakeTradeAM"
+})
 
--- تحميل المكتبة (Library)
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
-local Window = Library.CreateLib("THAER PRIVATE MOD", "Midnight")
+--==============================
+-- Globals
+--==============================
+local fakeName = "Ahmed"
 
--- القائمة الأولى: رسبنة الحيوانات
-local Tab1 = Window.NewTab("Pets Spawner")
-local Section1 = Tab1.NewSection("Legendary Pets")
+local ICON = "rbxassetid://4483345998"
+local NOTIFY_TIME = 3
 
--- قائمة الحيوانات
-local myPets = {"Shadow Dragon", "Frost Dragon", "Bat Dragon", "Owl", "Crow"}
-
-for i, petName in pairs(myPets) do
-    Section1.NewButton("Spawn " .. petName, "Visual Spawn Only", function()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "SUCCESS",
-            Text = petName .. " has been spawned!",
-            Duration = 5
+--==============================
+-- Notify Function
+--==============================
+local function notify(title, text)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = title,
+            Text = text,
+            Duration = NOTIFYTIME
         })
     end)
 end
 
--- القائمة الثانية: التريد واللاعب
-local Tab2 = Window.NewTab("Player & Trade")
-local Section2 = Tab2.NewSection("Abilities")
+--==============================
+-- Trade Tab
+--==============================
+local TradeTab = Window:MakeTab({
+    Name = "Trade",
+    Icon = ICON
+})
 
-Section2.NewSlider("WalkSpeed", "Change your speed", 500, 16, function(s)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
+TradeTab:AddTextbox({
+    Name = "Player Name",
+    Default = fakeName,
+    TextDisappear = false,
+    Callback = function(v)
+        if v ~= "" then
+            fakeName = v
+        end
+    end
+})
 
-Section2.NewButton("Force Trade Accept", "Visual green check", function()
-    print("Trade Accept Activated")
-end)
+TradeTab:AddButton({
+    Name = "Send Trade",
+    Callback = function()
+        notify("Trade Request", fakeName .. " sent you a trade request!")
+    end
+})
 
-Section2.NewKeybind("Hide Menu", "Press F to Toggle", Enum.KeyCode.F, function()
-    Library:ToggleUI()
-end)
+TradeTab:AddButton({
+    Name = "Accept Trade",
+    Callback = function()
+        notify("Trade", "You accepted " .. fakeName .. "'s trade")
+    end
+})
+
+TradeTab:AddButton({
+    Name = "Decline Trade",
+    Callback = function()
+        notify("Trade", "You declined " .. fakeName .. "'s trade")
+    end
+})
+
+--==============================
+-- Pets Tab
+--==============================
+local PetsTab = Window:MakeTab({
+    Name = "Pets",
+    Icon = ICON
+})
+
+local pets = {
+    "Shadow Dragon",
+    "Frost Dragon",
+    "Bat Dragon",
+    "Giraffe",
+    "Owl"
+}
+
+for , pet in ipairs(pets) do
+    PetsTab:AddButton({
+        Name = "Add " .. pet,
+        Callback = function()
+            notify("Trade Offer", fakeName .. " added " .. pet)
+        end
+    })
+end
+
+--==============================
+-- Block Tab
+--==============================
+local BlockTab = Window:MakeTab({
+    Name = "Block",
+    Icon = ICON
+})
+
+BlockTab:AddButton({
+    Name = "Block Player",
+    Callback = function()
+        notify("Blocked", "You blocked " .. fakeName)
+    end
+})
+
+BlockTab:AddButton({
+    Name = "Unblock Player",
+    Callback = function()
+        notify("Unblocked", "You unblocked " .. fakeName)
+    end
+})
+
+--==============================
+-- Init
+--==============================
+OrionLib:Init()
