@@ -1,48 +1,41 @@
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
-local Window = Library.CreateLib("thaer", "BloodTheme")
-
 for _, v in pairs(game.CoreGui:GetChildren()) do
-    if v:IsA("ScreenGui") and v.Name == "DirectHack" then v:Destroy() end
+    if v.Name == "ThaerAdoptMe" then v:Destroy() end
 end
 
-local sg = Instance.new("ScreenGui", game.CoreGui)
-sg.Name = "DirectHack"
+-- تحميل المكتبة (Library)
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("THAER PRIVATE MOD", "Midnight")
 
--- وظيفة لصنع زر بسيط ومستقل
-local function quickBtn(name, pos, color, func)
-    local b = Instance.new("TextButton", sg)
-    b.Size = UDim2.new(0, 180, 0, 40)
-    b.Position = pos
-    b.Text = name
-    b.BackgroundColor3 = color
-    b.TextColor3 = Color3.new(1,1,1)
-    b.Font = Enum.Font.SourceSansBold
-    b.TextSize = 16
-    b.MouseButton1Click:Connect(func)
+-- القائمة الأولى: رسبنة الحيوانات
+local Tab1 = Window.NewTab("Pets Spawner")
+local Section1 = Tab1.NewSection("Legendary Pets")
 
-    -- إضافة زوايا دائرية للزر
-    local corner = Instance.new("UICorner", b)
-    corner.CornerRadius = UDim.new(0, 8)
+-- قائمة الحيوانات
+local myPets = {"Shadow Dragon", "Frost Dragon", "Bat Dragon", "Owl", "Crow"}
+
+for i, petName in pairs(myPets) do
+    Section1.NewButton("Spawn " .. petName, "Visual Spawn Only", function()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "SUCCESS",
+            Text = petName .. " has been spawned!",
+            Duration = 5
+        })
+    end)
 end
 
--- توزيع الأزرار على الشاشة (يمين ويسار) عشان ما يغطون على اللعب
-quickBtn("Mega Shadow (Visual)", UDim2.new(0, 10, 0.2, 0), Color3.fromRGB(80, 0, 0), function()
-    game.StarterGui:SetCore("SendNotification", {Title = "PET", Text = "Shadow Dragon Added!"})
+-- القائمة الثانية: التريد واللاعب
+local Tab2 = Window.NewTab("Player & Trade")
+local Section2 = Tab2.NewSection("Abilities")
+
+Section2.NewSlider("WalkSpeed", "Change your speed", 500, 16, function(s)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
 end)
 
-quickBtn("Frost Dragon (Visual)", UDim2.new(0, 10, 0.3, 0), Color3.fromRGB(0, 80, 150), function()
-    game.StarterGui:SetCore("SendNotification", {Title = "PET", Text = "Frost Dragon Added!"})
+Section2.NewButton("Force Trade Accept", "Visual green check", function()
+    print("Trade Accept Activated")
 end)
 
-quickBtn("Speed x100", UDim2.new(0, 10, 0.4, 0), Color3.fromRGB(0, 120, 0), function()
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
-end)
-
-quickBtn("Fake Accept ON", UDim2.new(0, 10, 0.5, 0), Color3.fromRGB(200, 100, 0), function()
-    game.StarterGui:SetCore("SendNotification", {Title = "TRADE", Text = "Visual Accept Active"})
-end)
-
-quickBtn("إغلاق الأزرار", UDim2.new(0, 10, 0.6, 0), Color3.fromRGB(50, 50, 50), function()
-    sg:Destroy()
+Section2.NewKeybind("Hide Menu", "Press F to Toggle", Enum.KeyCode.F, function()
+    Library:ToggleUI()
 end)
