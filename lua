@@ -1,5 +1,5 @@
 -- تحميل Orion (نسخة خاصة فينا)
-local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))() -- لاحقاً ممكن نستبدل الرابط بكود مكتبتك المحلي
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/lua"))() -- لاحقاً ممكن نستبدل الرابط بكود مكتبتك المحلي
 
 -- إنشاء نافذة باسمك
 local Window = OrionLib:MakeWindow({
@@ -189,4 +189,5 @@ BlockTab:AddTextbox({
 -- ==============================
 -- Init Library
 -- ==============================
+
 OrionLib:Init()
