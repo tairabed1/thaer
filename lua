@@ -4,7 +4,7 @@ for _, v in pairs(game.CoreGui:GetChildren()) do
 end
 
 -- تحميل المكتبة (Library)
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/thaer"))()
 local Window = Library.CreateLib("THAER PRIVATE MOD", "Midnight")
 
 -- القائمة الأولى: رسبنة الحيوانات
