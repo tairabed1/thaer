@@ -1,126 +1,192 @@
---==============================
--- Orion Library
---==============================
-local OrionLib = loadstring(game:HttpGet( "https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+-- تحميل Orion (نسخة خاصة فينا)
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))() -- لاحقاً ممكن نستبدل الرابط بكود مكتبتك المحلي
 
---==============================
--- Window
---==============================
+-- إنشاء نافذة باسمك
 local Window = OrionLib:MakeWindow({
-    Name = "Adopt Me | Fake Trade",
+    Name = "NOR MOD - ADOPT ME",
+    HidePremium = false,
     SaveConfig = true,
-    ConfigFolder = "FakeTradeAM"
+    ConfigFolder = "NORMODConfig"
 })
 
---==============================
--- Globals
---==============================
-local fakeName = "Ahmed"
+-- ==============================
+-- Pets Spawner Tab
+-- ==============================
+local PetsTab = Window:MakeTab({Name = "Pets", Icon = "rbxassetid://4483345998"})
 
-local ICON = "rbxassetid://4483345998"
-local NOTIFY_TIME = 3
+local pets = {
+    "Mega Shadow Dragon",
+    "Neon Frost Dragon",
+    "Bat Dragon",
+    "Giraffe",
+    "Owl"
+}
 
---==============================
--- Notify Function
---==============================
-local function notify(title, text)
-    pcall(function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = title,
-            Text = text,
-            Duration = NOTIFYTIME
-        })
-    end)
+-- fixed loop variable (use _ for unused index)
+for _, pet in ipairs(pets) do
+    PetsTab:AddButton({
+        Name = "Spawn " .. pet .. " (Visual)",
+        Callback = function()
+            pcall(function()
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "PET",
+                    Text = pet .. " Added!"
+                })
+            end)
+        end
+    })
 end
 
---==============================
--- Trade Tab
---==============================
-local TradeTab = Window:MakeTab({
-    Name = "Trade",
-    Icon = ICON
-})
+-- ==============================
+-- Fake Trade Tab
+-- ==============================
+local TradeTab = Window:MakeTab({Name = "Fake Trade", Icon = "rbxassetid://4483345998"})
 
 TradeTab:AddTextbox({
     Name = "Player Name",
-    Default = fakeName,
+    Default = "Ahmed",
     TextDisappear = false,
-    Callback = function(v)
-        if v ~= "" then
-            fakeName = v
-        end
+    Callback = function(Value)
+        _G.FakeTradeName = Value
     end
 })
 
+_G.FakeTradeName = "Ahmed"
+
 TradeTab:AddButton({
-    Name = "Send Trade",
+    Name = "Send Trade Request",
     Callback = function()
-        notify("Trade Request", fakeName .. " sent you a trade request!")
+        pcall(function()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "TRADE",
+                Text = _G.FakeTradeName .. " sent you a trade request!"
+            })
+        end)
     end
 })
 
 TradeTab:AddButton({
     Name = "Accept Trade",
     Callback = function()
-        notify("Trade", "You accepted " .. fakeName .. "'s trade")
+        pcall(function()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "TRADE",
+                Text = "You accepted " .. _G.FakeTradeName .. "'s trade"
+            })
+        end)
     end
 })
 
 TradeTab:AddButton({
     Name = "Decline Trade",
     Callback = function()
-        notify("Trade", "You declined " .. fakeName .. "'s trade")
+        pcall(function()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "TRADE",
+                Text = "You declined " .. _G.FakeTradeName .. "'s trade"
+            })
+        end)
     end
 })
 
---==============================
--- Pets Tab
---==============================
-local PetsTab = Window:MakeTab({
-    Name = "Pets",
-    Icon = ICON
-})
+-- ==============================
+-- Player & Fly Tab
+-- ==============================
+local PlayerTab = Window:MakeTab({Name = "Player & Fly", Icon = "rbxassetid://4483345998"})
 
-local pets = {
-    "Shadow Dragon",
-    "Frost Dragon",
-    "Bat Dragon",
-    "Giraffe",
-    "Owl"
-}
-
-for , pet in ipairs(pets) do
-    PetsTab:AddButton({
-        Name = "Add " .. pet,
-        Callback = function()
-            notify("Trade Offer", fakeName .. " added " .. pet)
-        end
-    })
+-- safe function to set WalkSpeed
+local function setWalkSpeed(value)
+    local player = game.Players.LocalPlayer
+    if not player then return end
+    local char = player.Character or player.CharacterAdded:Wait()
+    if not char then return end
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = value
+    end
 end
 
---==============================
--- Block Tab
---==============================
-local BlockTab = Window:MakeTab({
-    Name = "Block",
-    Icon = ICON
-})
-
-BlockTab:AddButton({
-    Name = "Block Player",
-    Callback = function()
-        notify("Blocked", "You blocked " .. fakeName)
+PlayerTab:AddSlider({
+    Name = "WalkSpeed",
+    Min = 16,
+    Max = 500,
+    Default = 16,
+    Increment = 1,
+    Callback = function(Value)
+        pcall(function() setWalkSpeed(Value) end)
     end
 })
 
-BlockTab:AddButton({
-    Name = "Unblock Player",
+-- Fly toggle with safe ChangeState (Enum) and connection handling
+local FlyActivated = false
+local FlyConnection
+
+PlayerTab:AddButton({
+    Name = "Toggle Fly",
     Callback = function()
-        notify("Unblocked", "You unblocked " .. fakeName)
+        local player = game.Players.LocalPlayer
+        if not player then return end
+
+        FlyActivated = not FlyActivated
+
+        if FlyActivated then
+            -- prevent creating multiple connections
+            if FlyConnection and FlyConnection.Connected then
+                FlyConnection:Disconnect()
+                FlyConnection = nil
+            end
+
+            FlyConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
+                local char = player.Character
+                local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    -- use Enum value (not a string)
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    -- alternatively: humanoid.Jump = true
+                end
+            end)
+
+            pcall(function()
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "FLY",
+                    Text = "Jump to Fly Active!"
+                })
+            end)
+        else
+            if FlyConnection then
+                FlyConnection:Disconnect()
+                FlyConnection = nil
+            end
+            pcall(function()
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "FLY",
+                    Text = "Fly Disabled"
+                })
+            end)
+        end
     end
 })
 
---==============================
--- Init
---==============================
+-- ==============================
+-- Block List Tab
+-- ==============================
+local BlockTab = Window:MakeTab({Name = "Block List", Icon = "rbxassetid://4483345998"})
+
+BlockTab:AddTextbox({
+    Name = "Enter Name to Block",
+    Default = "",
+    TextDisappear = true,
+    Callback = function(Value)
+        pcall(function()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "BLOCK",
+                Text = "Player " .. Value .. " Blocked!"
+            })
+        end)
+    end
+})
+
+-- ==============================
+-- Init Library
+-- ==============================
 OrionLib:Init()
