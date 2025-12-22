@@ -1,194 +1,37 @@
--- تحميل Orion (نسخة خاصة فينا)
-local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tairabed1/thaer/refs/heads/main/lua"))() -- لاحقاً ممكن نستبدل الرابط بكود مكتبتك المحلي
 
--- إنشاء نافذة باسمك
-local Window = OrionLib:MakeWindow({
-    Name = "NOR MOD - ADOPT ME",
-    HidePremium = false,
-    SaveConfig = true,
-    ConfigFolder = "NORMODConfig"
-})
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("THAER PRIVATE MOD", "Midnight")
 
--- ==============================
--- Pets Spawner Tab
--- ==============================
-local PetsTab = Window:MakeTab({Name = "Pets", Icon = "rbxassetid://4483345998"})
+-- 2. قسم الحيوانات (كما في صورتك تماماً)
+local Tab1 = Window:NewTab("Pets Spawner")
+local Section1 = Tab1:NewSection("Legendary Pets")
 
-local pets = {
-    "Mega Shadow Dragon",
-    "Neon Frost Dragon",
-    "Bat Dragon",
-    "Giraffe",
-    "Owl"
-}
+local myPets = {"Shadow Dragon", "Frost Dragon", "Bat Dragon", "Owl", "Crow"}
 
--- fixed loop variable (use _ for unused index)
-for _, pet in ipairs(pets) do
-    PetsTab:AddButton({
-        Name = "Spawn " .. pet .. " (Visual)",
-        Callback = function()
-            pcall(function()
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "PET",
-                    Text = pet .. " Added!"
-                })
-            end)
-        end
-    })
+for _, petName in pairs(myPets) do
+    -- تم تعديل السطر التالي ليصبح ":" بدلاً من "." لضمان ظهور الزر
+    Section1:NewButton("Spawn " .. petName, "Visual Spawn Only", function()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "SUCCESS",
+            Text = petName .. " has been spawned!",
+            Duration = 5
+        })
+    end)
 end
 
--- ==============================
--- Fake Trade Tab
--- ==============================
-local TradeTab = Window:MakeTab({Name = "Fake Trade", Icon = "rbxassetid://4483345998"})
+-- 3. قسم اللاعب والتريد (الذي ظهر في لقطة الشاشة)
+local Tab2 = Window:NewTab("Player & Trade")
+local Section2 = Tab2:NewSection("Abilities")
 
-TradeTab:AddTextbox({
-    Name = "Player Name",
-    Default = "Ahmed",
-    TextDisappear = false,
-    Callback = function(Value)
-        _G.FakeTradeName = Value
-    end
-})
+Section2:NewSlider("WalkSpeed", "Change your speed", 500, 16, function(s)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
 
-_G.FakeTradeName = "Ahmed"
+Section2:NewButton("Force Trade Accept", "Visual green check", function()
+    print("Trade Accept Activated")
+end)
 
-TradeTab:AddButton({
-    Name = "Send Trade Request",
-    Callback = function()
-        pcall(function()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "TRADE",
-                Text = _G.FakeTradeName .. " sent you a trade request!"
-            })
-        end)
-    end
-})
-
-TradeTab:AddButton({
-    Name = "Accept Trade",
-    Callback = function()
-        pcall(function()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "TRADE",
-                Text = "You accepted " .. _G.FakeTradeName .. "'s trade"
-            })
-        end)
-    end
-})
-
-TradeTab:AddButton({
-    Name = "Decline Trade",
-    Callback = function()
-        pcall(function()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "TRADE",
-                Text = "You declined " .. _G.FakeTradeName .. "'s trade"
-            })
-        end)
-    end
-})
-
--- ==============================
--- Player & Fly Tab
--- ==============================
-local PlayerTab = Window:MakeTab({Name = "Player & Fly", Icon = "rbxassetid://4483345998"})
-
--- safe function to set WalkSpeed
-local function setWalkSpeed(value)
-    local player = game.Players.LocalPlayer
-    if not player then return end
-    local char = player.Character or player.CharacterAdded:Wait()
-    if not char then return end
-    local humanoid = char:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = value
-    end
-end
-
-PlayerTab:AddSlider({
-    Name = "WalkSpeed",
-    Min = 16,
-    Max = 500,
-    Default = 16,
-    Increment = 1,
-    Callback = function(Value)
-        pcall(function() setWalkSpeed(Value) end)
-    end
-})
-
--- Fly toggle with safe ChangeState (Enum) and connection handling
-local FlyActivated = false
-local FlyConnection
-
-PlayerTab:AddButton({
-    Name = "Toggle Fly",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        if not player then return end
-
-        FlyActivated = not FlyActivated
-
-        if FlyActivated then
-            -- prevent creating multiple connections
-            if FlyConnection and FlyConnection.Connected then
-                FlyConnection:Disconnect()
-                FlyConnection = nil
-            end
-
-            FlyConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
-                local char = player.Character
-                local humanoid = char and char:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    -- use Enum value (not a string)
-                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                    -- alternatively: humanoid.Jump = true
-                end
-            end)
-
-            pcall(function()
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "FLY",
-                    Text = "Jump to Fly Active!"
-                })
-            end)
-        else
-            if FlyConnection then
-                FlyConnection:Disconnect()
-                FlyConnection = nil
-            end
-            pcall(function()
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "FLY",
-                    Text = "Fly Disabled"
-                })
-            end)
-        end
-    end
-})
-
--- ==============================
--- Block List Tab
--- ==============================
-local BlockTab = Window:MakeTab({Name = "Block List", Icon = "rbxassetid://4483345998"})
-
-BlockTab:AddTextbox({
-    Name = "Enter Name to Block",
-    Default = "",
-    TextDisappear = true,
-    Callback = function(Value)
-        pcall(function()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "BLOCK",
-                Text = "Player " .. Value .. " Blocked!"
-            })
-        end)
-    end
-})
-
--- ==============================
--- Init Library
--- ==============================
-
-OrionLib:Init()
-
+-- 4. إخفاء القائمة بحرف F
+Section2:NewKeybind("Hide Menu", "Press F to Toggle", Enum.KeyCode.F, function()
+    Library:ToggleUI()
+end)
